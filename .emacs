@@ -49,11 +49,10 @@
 (transient-mark-mode t);这个忘了，郁闷！
 (setq x-select-enable-clipboard t);支持emacs和外部程序的粘贴
 (setq frame-title-format "mfs6174@%b");在标题栏提示你目前在什么位置。你要把zhan改成自己的用户名
+(global-linum-mode t);;设置显示行号
 
 (add-to-list 'load-path "~/.emacsd")
 ;;加载目录
-
-(load-file "/home/mfs6174/.emacsd/multi-gdb-ui.el")
 
 (load-file "/home/mfs6174/.emacsd/twit.el")
 (add-hook 'shell-mode-hook 'wcy-shell-mode-hook-func)
@@ -67,6 +66,8 @@
        (string-match "exited abnormally with code.*" state)
        (string-match "finished" state))
       (kill-buffer (current-buffer))))
+;;使shell能够自动退出
+
 
 (require 'muse-mode)
 ;; Load publishing style
@@ -76,41 +77,43 @@
 (require 'muse-texinfo)
 (require 'muse-docbook)
 
+
 (require 'ido)
 (ido-mode t)
 ;;打开文件的辅助功能
 
-(require 'tabbar)
-(tabbar-mode t)
-;;开启标签栏功能
+
+;(require 'tabbar)
+;(tabbar-mode t)
+;;开启标签栏功能 不常用 注释掉加快速度
+
 
 (require 'color-theme)
 (color-theme-initialize)
 (color-theme-kingsajz)
 ;;设置颜色主题
 
-(global-linum-mode t)
-;;设置显示行号
 
-(global-set-key [(f5)] 'loop-alpha)  ;;注意这行中的F8 , 可以改成你想要的按键
+;(global-set-key [(f5)] 'loop-alpha)  ;;注意这行中的F8 , 可以改成你想要的按键1 
+;(setq alpha-list '((60 45) (100 100)))
+;(defun loop-alpha ()
+ ; (interactive)
+ ; (let ((h (car alpha-list)))                
+  ;  ((lambda (a ab)
+   ;    (set-frame-parameter (selected-frame) 'alpha (list a ab))
+    ;   (add-to-list 'default-frame-alist (cons 'alpha (list a ab)))
+    ;   ) (car h) (car (cdr h)))
+    ;(setq alpha-list (cdr (append alpha-list (list h))))
+    ;)
+;)
+;;这个在debian sid with gnome3 中似乎已经没有作用 注释掉 以后再研究
 
-(setq alpha-list '((60 45) (100 100)))
-
-(defun loop-alpha ()
-  (interactive)
-  (let ((h (car alpha-list)))                
-    ((lambda (a ab)
-       (set-frame-parameter (selected-frame) 'alpha (list a ab))
-       (add-to-list 'default-frame-alist (cons 'alpha (list a ab)))
-       ) (car h) (car (cdr h)))
-    (setq alpha-list (cdr (append alpha-list (list h))))
-    )
-)
 
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacsd/dict")
 (ac-config-default)
 ;;开启自动完成
+
 
 (require 'gud)
 (global-set-key [(C-f8)] 'gdb)
@@ -123,6 +126,7 @@
 (global-set-key (kbd "M-i") 'previous-line)
 (global-set-key (kbd "C-S-k") 'kill-line)
 ;;个性键位
+
 
 (require 'cc-mode)
 
@@ -138,7 +142,8 @@
 	(other-window 1)
 )
 (global-set-key [(f8)] 'gdb-hori)
-;;原创的左右gdb模式
+;;原创的左右gdb模式 自定义函数
+
 
 (defun my-c-comment ()                                                                                     
  (interactive)                                                                                        
@@ -147,7 +152,6 @@
 )
 (global-unset-key "\M-;")     
 (global-set-key "\M-;" 'my-c-comment)
-
 (defun jumozhushi ()
   (interactive)
   (move-end-of-line 1)
@@ -155,7 +159,7 @@
 )
 ;;(global-unset-key "\C-/")
 (global-set-key (kbd "C-/") 'jumozhushi)
-;;快速添加注释块
+;;快速添加注释块 自定义函数
 
 
 (auto-insert-mode)  ;;; Adds hook to find-files-hook
@@ -167,23 +171,27 @@
             (c++-mode . "usaco.cpp")
             )
            auto-insert-alist))
-;;自动插入
+;;自动插入 自定义函数
 
 
 (defun moban (sname)
   (interactive "sName ")
   (insert-file (concat auto-insert-directory sname ".h"))
 )
-
 (global-set-key (kbd "C-c i") 'moban)
+;;自动插入模版 自定义函数
 
-(require 'twit)
-  (setq twit-show-user-images t) ;; 显示好友头像
-  (setq twit-user-image-dir "~/.twit") ;; 设置头像保存路径
-(global-set-key (kbd "C-c t") 'twit-show-recent-tweets)
-(global-set-key (kbd "C-c w") 'twit-post)
 
-;;一键快速编译 C++-mode
+;;twit插件 平时不用所以注释掉加快速度
+;(load-file "/home/mfs6174/.emacsd/multi-gdb-ui.el")
+;(require 'twit)
+;  (setq twit-show-user-images t) ;; 显示好友头像
+;  (setq twit-user-image-dir "~/.twit") ;; 设置头像保存路径
+;(global-set-key (kbd "C-c t") 'twit-show-recent-tweets)
+;(global-set-key (kbd "C-c w") 'twit-post)
+
+
+;;一键快速编译 C++-mode 自定义函数
 (defun quick-compile ()
 "A quick compile funciton for C++"
 (interactive)
@@ -192,8 +200,8 @@
 )
 (global-set-key [(C-f9)] 'quick-compile)  ;;快捷键C-F9
 
-(define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
 
+(define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
 (setq c-default-style "GNU")
 ;;风格设置
 (c-set-offset 'inline-open 0)
