@@ -1,0 +1,4 @@
+mfs6174's emacs config files
+mfs6174的Emacs配置文件和插件,包括作为自由软件的插件,自己的模版文件
+.emacs文件包含配置和自定义函数
+对所有.cpp .h .c 的模版文件,以及.emacs采用MIT协议授权
