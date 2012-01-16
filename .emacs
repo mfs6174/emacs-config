@@ -87,9 +87,11 @@
 ;;开启标签栏功能 不常用 注释掉加快速度
 
 
-(require 'color-theme)
-(color-theme-initialize)
-(color-theme-kingsajz)
+;(require 'color-theme)
+;(color-theme-initialize)
+;(color-theme-kingsajz)
+(load-file "~/.emacsd/mycolor1.el")
+(my-color-theme)
 ;;设置颜色主题
 
 
@@ -113,7 +115,7 @@
 (ac-config-default)
 ;;开启自动完成
 
-;(load-file "/home/mfs6174/.emacsd/multi-gdb-ui.el")
+(load-file "/home/mfs6174/.emacsd/multi-gdb-ui.el")
 (require 'gud)
 (global-set-key [(C-f8)] 'gdb)
 ;;开启gdb
@@ -182,7 +184,7 @@
 
 
 ;;twit插件 平时不用所以注释掉加快速度
-;(load-file "/home/mfs6174/.emacsd/twit.el")
+;(load-file "/home/mfs6174/.emacsd/twit.elc")
 ;(require 'twit)
 ;  (setq twit-show-user-images t) ;; 显示好友头像
 ;  (setq twit-user-image-dir "~/.twit") ;; 设置头像保存路径
