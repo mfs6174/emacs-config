@@ -12,6 +12,8 @@
   ;; If there is more than one, they won't work right.
  )
 
+;;need for muse-el and python-mode deb packages
+
 (set-default-font "courier 10 pitch-10")
 (set-fontset-font "fontset-default"
 'han '("WenQuanYi Bitmap Song" . "unicode-bmp"))
@@ -115,7 +117,7 @@
 (ac-config-default)
 ;;开启自动完成
 
-(load-file "/home/mfs6174/.emacsd/multi-gdb-ui.el")
+;(load-file "/home/mfs6174/.emacsd/multi-gdb-ui.el")
 (require 'gud)
 (global-set-key [(C-f8)] 'gdb)
 ;;开启gdb
