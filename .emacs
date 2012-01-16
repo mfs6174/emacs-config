@@ -54,7 +54,6 @@
 (add-to-list 'load-path "~/.emacsd")
 ;;加载目录
 
-(load-file "/home/mfs6174/.emacsd/twit.el")
 (add-hook 'shell-mode-hook 'wcy-shell-mode-hook-func)
 (defun wcy-shell-mode-hook-func  ()
   (set-process-sentinel (get-buffer-process (current-buffer))
@@ -114,7 +113,7 @@
 (ac-config-default)
 ;;开启自动完成
 
-
+;(load-file "/home/mfs6174/.emacsd/multi-gdb-ui.el")
 (require 'gud)
 (global-set-key [(C-f8)] 'gdb)
 ;;开启gdb
@@ -183,7 +182,7 @@
 
 
 ;;twit插件 平时不用所以注释掉加快速度
-;(load-file "/home/mfs6174/.emacsd/multi-gdb-ui.el")
+;(load-file "/home/mfs6174/.emacsd/twit.el")
 ;(require 'twit)
 ;  (setq twit-show-user-images t) ;; 显示好友头像
 ;  (setq twit-user-image-dir "~/.twit") ;; 设置头像保存路径
