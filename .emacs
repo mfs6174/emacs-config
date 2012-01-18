@@ -125,7 +125,7 @@
 (global-set-key (kbd "C-k") 'kill-whole-line)
 (global-set-key (kbd "M-j") 'backward-char)
 (global-set-key (kbd "M-l") 'forward-char)
-;;(global-set-key (kbd "M-k") 'next-line)
+(global-set-key (kbd "M-k") 'next-line)
 (global-set-key (kbd "M-i") 'previous-line)
 (global-set-key (kbd "C-S-k") 'kill-line)
 ;;个性键位
@@ -202,6 +202,14 @@
 (other-window 1)
 )
 (global-set-key [(C-f9)] 'quick-compile)  ;;快捷键C-F9
+
+(defun quick-compile-opencv ()
+"A quick compile funciton for codes with OpenCV"
+(interactive)
+(compile (concat "g++ -g -pg -Wall -I/usr/local/include/opencv -L/usr/local/lib -lm -lcv -lhighgui -lcvaux -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(other-window 1)
+)
+(global-set-key [(C-M-f9)] 'quick-compile-opencv)
 
 
 (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
