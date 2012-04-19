@@ -206,7 +206,7 @@
 (defun quick-compile-opencv ()
 "A quick compile funciton for codes with OpenCV"
 (interactive)
-(compile (concat "g++ -g -pg -Wall -I/usr/include/ -L/usr/lib -lcv -lm -lhighgui -lcvaux -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(compile (concat "g++ -g -pg -Wall `pkg-config --libs --cflags opencv` -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
 (global-set-key [(C-S-f9)] 'quick-compile-opencv)
