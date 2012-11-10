@@ -174,6 +174,13 @@
             (c++-mode . "usaco.cpp")
             )
            auto-insert-alist))
+
+
+(setq auto-insert-alist
+      (append '(
+            (asm-mode . "asm-temp.asm")
+            )
+           auto-insert-alist))
 ;;自动插入 自定义函数
 
 
