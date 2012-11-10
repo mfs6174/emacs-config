@@ -29,8 +29,8 @@
 ;;设置字体
 
 (setq default-frame-alist 
-'((top . 77) (left . 200) 
-(width . 123) (height . 39) 
+'((top . 70) (left . 200) 
+(width . 155) (height . 47) 
 ))
 ;;设置窗口大小
 
