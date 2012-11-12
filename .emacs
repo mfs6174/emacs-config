@@ -29,8 +29,8 @@
 ;;设置字体
 
 (setq default-frame-alist 
-'((top . 77) (left . 200) 
-(width . 123) (height . 39) 
+'((top . 70) (left . 200) 
+(width . 155) (height . 47) 
 ))
 ;;设置窗口大小
 
@@ -83,6 +83,11 @@
 (ido-mode t)
 ;;打开文件的辅助功能
 
+(defun mfs-sudo-find-file (sfile)
+(interactive "sFile ")
+  (find-file (concat "/sudo:localhost:" sfile)))
+(global-set-key (kbd "C-c f") 'mfs-sudo-find-file)
+;;open with sudo
 
 ;(require 'tabbar)
 ;(tabbar-mode t)
@@ -186,7 +191,7 @@
 
 (defun moban (sname)
   (interactive "sName ")
-  (insert-file (concat auto-insert-directory sname ".h"))
+  (insert-file (concat auto-insert-directory sname))
 )
 (global-set-key (kbd "C-c i") 'moban)
 ;;自动插入模版 自定义函数
