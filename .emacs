@@ -186,6 +186,8 @@
             (asm-mode . "asm-temp.asm")
             )
            auto-insert-alist))
+
+
 ;;自动插入 自定义函数
 
 
@@ -249,4 +251,19 @@
 )
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
+(add-hook 'LaTeX-mode-hook (lambda()
+			     (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+			     (setq TeX-command-default "XeLaTeX")
+			     (setq TeX-save-query  nil )
+			     (setq TeX-show-compilation t)
+			     ))
+
+(defun mtex-template ()
+  (interactive)
+  (erase-buffer)
+  (insert-file (concat auto-insert-directory "template.tex"))
+  (beginning-of-buffer)
+  (next-line 256)
+)
+(global-set-key (kbd "C-c t") 'mtex-template)
 
