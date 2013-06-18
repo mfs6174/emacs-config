@@ -135,17 +135,26 @@ extendedchars=false                  % 这一条命令可以解决代码跨页�
 %%%%%%%%%%%%%%%%%%%%%%%%%xeCJK字体设置%%%%%%%%%%%%%%%%%%%%%%%%%
 \punctstyle{kaiming}                                        % 设置中文标点样式
                                                             % 支持quanjiao、banjiao、kaiming等多种方式
-\setCJKmainfont[BoldFont=WenQuanYi Micro Hei Mono]{WenQuanYi Micro Hei Mono}   % 设置缺省中文字体
-\setCJKsansfont[BoldFont=WenQuanYi Micro Hei Mono]{WenQuanYi Micro Hei Mono}  % 设置中文无衬线字体
-\setCJKmonofont{WenQuanYi Micro Hei Mono}                            % 设置等宽字体
+% \setCJKmainfont[BoldFont=WenQuanYi Micro Hei Mono]{WenQuanYi Micro Hei Mono}   % 设置缺省中文字体
+% \setCJKsansfont[BoldFont=WenQuanYi Micro Hei Mono]{WenQuanYi Micro Hei Mono}  % 设置中文无衬线字体
+% \setCJKmonofont{WenQuanYi Micro Hei Mono}                            % 设置等宽字体
 \setmainfont{DejaVu Serif}                                  % 英文衬线字体
 \setmonofont{DejaVu Sans Mono}                              % 英文等宽字体
 \setsansfont{DejaVu Sans}                                   % 英文无衬线字体
+\setCJKmainfont[BoldFont={WenQuanYi Micro Hei Mono}, ItalicFont={AR PL KaitiM GB}]{AR PL SungtiL GB}
+\setCJKsansfont{AR PL KaitiM GB}
+\setCJKmonofont{王汉宗中仿宋简}
 
-%%%%定义新字体%%%%
 \setCJKfamilyfont{song}{AR PL SungtiL GB}                     
 \setCJKfamilyfont{kai}{AR PL KaitiM GB}
 \setCJKfamilyfont{hei}{WenQuanYi Micro Hei Mono}
+\setCJKfamilyfont{yao}{方正姚体_GBK}
+\setCJKfamilyfont{fs}{王汉宗中仿宋简}
+\setCJKfamilyfont{yahei}{微软雅黑}
+%%%%定义新字体%%%%
+% \setCJKfamilyfont{song}{AR PL SungtiL GB}                     
+% \setCJKfamilyfont{kai}{AR PL KaitiM GB}
+% \setCJKfamilyfont{hei}{WenQuanYi Micro Hei Mono}
 %\setCJKfamilyfont{fangsong}{Adobe Fangsong Std}
 %\setCJKfamilyfont{lisu}{LiSu}
 %\setCJKfamilyfont{youyuan}{YouYuan}
@@ -153,6 +162,9 @@ extendedchars=false                  % 这一条命令可以解决代码跨页�
 \newcommand{\song}{\CJKfamily{song}}                       % 自定义宋体
 \newcommand{\kai}{\CJKfamily{kai}}                         % 自定义楷体
 \newcommand{\hei}{\CJKfamily{hei}}                         % 自定义黑体
+\newcommand\yao{\CJKfamily{yao}}
+\newcommand\fs{\CJKfamily{fs}}
+\newcommand\yahei{\CJKfamily{yahei}}
 %\newcommand{\fangsong}{\CJKfamily{fangsong}}               % 自定义仿宋体
 %\newcommand{\lisu}{\CJKfamily{lisu}}                       % 自定义隶书
 %\newcommand{\youyuan}{\CJKfamily{youyuan}}                 % 自定义幼圆
@@ -210,7 +222,7 @@ extendedchars=false                  % 这一条命令可以解决代码跨页�
 %%%%%%%%%%%%%%%%%%%%%%%%%一些个性设置%%%%%%%%%%%%%%%%%%%%%%
 % \renewcommand{\baselinestretch}{1.3}     % 效果同\linespread{1.3}
 % \pagenumbering{arabic}                   % 设定页码方式，包括arabic、roman等方式
-% \sloppy                                  % 有时LaTeX无从断行，产生overfull的错误，
+\sloppy                                  % 有时LaTeX无从断行，产生overfull的错误，
                                            % 这条命令降低LaTeX断行标准
 \setlength{\parskip}{0.5\baselineskip}     % 设定段间距
 \linespread{1}                             % 设定行距
@@ -229,8 +241,8 @@ extendedchars=false                  % 这一条命令可以解决代码跨页�
 % 设定首行缩进为2em。注意此设置一定要在document环境之中。
 % 这可能与\setlength作用范围相关
 \setcounter{secnumdepth}{5}
-\title{这是题目 }
-\author{这是作者 可以多行 mfs6174\\xijinz@acm.org}
+\title{这是题目}
+\author{这是作者 可以多行\\xijinz@acm.org}
 \maketitle
 %%%%%titlepage%%%%
 % 自己定义标题页
@@ -253,6 +265,7 @@ extendedchars=false                  % 这一条命令可以解决代码跨页�
 %目录单独一页
 
 %%%%%%%%%%%%%%%%%请在以下填入正文
+
 
 
 
