@@ -29,8 +29,8 @@
 ;;设置字体
 
 (setq default-frame-alist 
-'((top . 70) (left . 200) 
-(width . 155) (height . 47) 
+'((top . 70) (left . 230) 
+(width . 125) (height . 40) 
 ))
 ;;设置窗口大小
 
@@ -198,6 +198,10 @@
 (global-set-key (kbd "C-c i") 'moban)
 ;;自动插入模版 自定义函数
 
+
+(add-to-list 'load-path "~/.emacsd/matlab-emacs")
+(require 'matlab-load)
+;;matlab模式
 
 ;;twit插件 平时不用所以注释掉加快速度
 ;(load-file "/home/mfs6174/.emacsd/twit.elc")
