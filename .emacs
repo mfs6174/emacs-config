@@ -69,6 +69,11 @@
       (kill-buffer (current-buffer))))
 ;;使shell能够自动退出
 
+(autoload 'markdown-mode "markdown-mode"
+	"Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'". markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'". markdown-mode))
+;;开启markdown模式
 
 (require 'muse-mode)
 ;; Load publishing style
@@ -187,6 +192,12 @@
             )
            auto-insert-alist))
 
+(setq auto-insert-alist
+      (append '(
+		(python-mode . "coding.py")
+		)
+           auto-insert-alist))
+
 
 ;;自动插入 自定义函数
 
@@ -201,6 +212,20 @@
 
 (add-to-list 'load-path "~/.emacsd/matlab-emacs")
 (require 'matlab-load)
+(require 'cedet-matlab)
+(matlab-cedet-setup)
+(add-hook 'matlab-mode-hook
+          (lambda ()
+            (auto-complete-mode 1)
+	    (c-toggle-hungry-state 1)
+            ))
+(custom-set-variables
+ '(matlab-shell-command-switches '("-nodesktop -nosplash")))
+(add-hook 'matlab-mode-hook 'auto-complete-mode)
+(setq auto-mode-alist
+      (cons
+       '("\\.m$" . matlab-mode)
+       auto-mode-alist))
 ;;matlab模式
 
 ;;twit插件 平时不用所以注释掉加快速度
