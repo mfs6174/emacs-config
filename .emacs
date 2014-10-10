@@ -281,7 +281,7 @@
 (defun quick-compile ()
 "A quick compile funciton for C++"
 (interactive)
-(compile (concat "g++ -g -pg -O0 -Wall -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(compile (concat "g++ -g  -O0 -Wall -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
 (global-set-key [(C-f9)] 'quick-compile)  ;;快捷键C-F9
