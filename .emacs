@@ -69,14 +69,55 @@
       (kill-buffer (current-buffer))))
 ;;使shell能够自动退出
 
+(autoload 'markdown-mode "markdown-mode"
+	"Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'". markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'". markdown-mode))
+;;开启markdown模式
 
-(require 'muse-mode)
-;; Load publishing style
-(require 'muse-html)
-(require 'muse-wiki)
-(require 'muse-latex)
-(require 'muse-texinfo)
-(require 'muse-docbook)
+;;所以我们不再使用muse模式
+;; (require 'muse-mode)
+;; ;; Load publishing style
+;; (require 'muse-html)
+;; (require 'muse-wiki)
+;; (require 'muse-latex)
+;; (require 'muse-texinfo)
+;; (require 'muse-docbook)
+
+;;开启cedet的semantic自动补全
+(require 'cedet)
+(setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
+                                  global-semanticdb-minor-mode
+                                  global-semantic-idle-summary-mode
+                                  global-semantic-mru-bookmark-mode
+				  global-semantic-idle-completions-mode
+				  global-semantic-decoration-mode
+				  global-semantic-highlight-func-mode))
+(semantic-mode 1)
+(global-semantic-highlight-edits-mode (if window-system 1 -1))
+(global-semantic-show-unmatched-syntax-mode 1)
+(global-semantic-show-parser-state-mode 1)
+
+;; (setq semanticdb-project-roots (list (expand-file-name "/")))
+(defconst cedet-user-include-dirs
+  (list ".." "../include" "../inc" "../common" "../public"
+	"." "./include" "./inc" "./common" "./public"
+        "../.." "../../include" "../../inc" "../../common" "../../public"))
+(defconst cedet-win32-include-dirs
+  (list "C:/MinGW/include"
+        "C:/MinGW/include/c++/3.4.5"
+        "C:/MinGW/include/c++/3.4.5/mingw32"
+        "C:/MinGW/include/c++/3.4.5/backward"
+        "C:/MinGW/lib/gcc/mingw32/3.4.5/include"
+        "C:/Program Files/Microsoft Visual Studio/VC98/MFC/Include"))
+(require 'semantic-c nil 'noerror)
+(let ((include-dirs cedet-user-include-dirs))
+  (when (eq system-type 'windows-nt)
+    (setq include-dirs (append include-dirs cedet-win32-include-dirs)))
+  (mapc (lambda (dir)
+          (semantic-add-system-include dir 'c++-mode)
+          (semantic-add-system-include dir 'c-mode))
+        include-dirs))
 
 
 (require 'ido)
@@ -191,6 +232,12 @@
             )
            auto-insert-alist))
 
+(setq auto-insert-alist
+      (append '(
+		(python-mode . "coding.py")
+		)
+           auto-insert-alist))
+
 
 ;;自动插入 自定义函数
 
@@ -205,6 +252,20 @@
 
 (add-to-list 'load-path "~/.emacsd/matlab-emacs")
 (require 'matlab-load)
+(require 'cedet-matlab)
+(matlab-cedet-setup)
+(add-hook 'matlab-mode-hook
+          (lambda ()
+            (auto-complete-mode 1)
+	    (c-toggle-hungry-state 1)
+            ))
+(custom-set-variables
+ '(matlab-shell-command-switches '("-nodesktop -nosplash")))
+(add-hook 'matlab-mode-hook 'auto-complete-mode)
+(setq auto-mode-alist
+      (cons
+       '("\\.m$" . matlab-mode)
+       auto-mode-alist))
 ;;matlab模式
 
 ;;twit插件 平时不用所以注释掉加快速度
