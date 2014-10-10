@@ -29,8 +29,8 @@
 ;;设置字体
 
 (setq default-frame-alist 
-'((top . 70) (left . 230) 
-(width . 125) (height . 40) 
+'((top . 40) (left . 400) 
+(width . 170) (height . 50) 
 ))
 ;;设置窗口大小
 
@@ -101,6 +101,10 @@
 (my-color-theme)
 ;;设置颜色主题
 
+;;开启glsl
+(autoload 'glsl-mode "glsl-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
 
 ;(global-set-key [(f5)] 'loop-alpha)  ;;注意这行中的F8 , 可以改成你想要的按键1 
 ;(setq alpha-list '((60 45) (100 100)))
@@ -224,10 +228,18 @@
 (defun quick-compile-opencv ()
 "A quick compile funciton for codes with OpenCV"
 (interactive)
-(compile (concat "g++ -g -pg -Wall `pkg-config --libs --cflags opencv` -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(compile (concat "g++ -g  -Wall `pkg-config --libs --cflags opencv` -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
 (global-set-key [(C-S-f9)] 'quick-compile-opencv)
+
+(defun quick-compile-opengl ()
+"A quick compile funciton for codes with OpenGL(glew and glfw)"
+(interactive)
+(compile (concat "g++ -g  -Wall `pkg-config --libs --cflags glfw3 glew` -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(other-window 1)
+)
+(global-set-key [(C-S-f10)] 'quick-compile-opengl)
 
 
 (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
