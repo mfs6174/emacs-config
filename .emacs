@@ -14,7 +14,7 @@
 
 ;;need for muse-el and python-mode deb packages
 
-(set-default-font "courier 10 pitch-10")
+(set-default-font "DejaVu Sans Mono-10")
 (set-fontset-font "fontset-default"
 'han '("WenQuanYi Bitmap Song" . "unicode-bmp"))
 (set-fontset-font "fontset-default"
@@ -25,16 +25,16 @@
 'gb18030 '("WenQuanYi Bitmap Song". "unicode-bmp"))
 (set-fontset-font "fontset-default"
 'symbol '("WenQuanYi Bitmap Song". "unicode-bmp"))
-(add-to-list 'default-frame-alist '(font . "courier 10 pitch-10"))
+(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10"))
 ;;设置字体
 
 (setq default-frame-alist 
 '((top . 40) (left . 400) 
-(width . 170) (height . 50) 
+(width . 170) (height . 60) 
 ))
 ;;设置窗口大小
 
-(setq user-full-name "mfs6174 Zhang")
+(setq user-full-name "X.J. Zhang")
 (setq user-mail-address "mfs6174@gmail.com")
 ;;用户信息
 
@@ -90,7 +90,7 @@
                                   global-semanticdb-minor-mode
                                   global-semantic-idle-summary-mode
                                   global-semantic-mru-bookmark-mode
-				  global-semantic-idle-completions-mode
+				  ;;global-semantic-idle-completions-mode
 				  global-semantic-decoration-mode
 				  global-semantic-highlight-func-mode))
 (semantic-mode 1)
@@ -289,7 +289,7 @@
 (defun quick-compile-opencv ()
 "A quick compile funciton for codes with OpenCV"
 (interactive)
-(compile (concat "g++ -g  -Wall `pkg-config --libs --cflags opencv` -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(compile (concat "g++ -g  -Wall `pkg-config --libs --cflags opencv` -lopencv_nonfree -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
 (global-set-key [(C-S-f9)] 'quick-compile-opencv)
