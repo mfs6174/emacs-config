@@ -45,8 +45,8 @@
 (display-time-mode 1);显示时间，格式如下
 (setq display-time-24hr-format t)
 (setq display-time-day-and-date t)
-(tool-bar-mode nil);去掉那个大大的工具栏
-(scroll-bar-mode nil);去掉滚动条，因为可以使用鼠标滚轮了 ^_^
+(tool-bar-mode 0);去掉那个大大的工具栏
+(scroll-bar-mode 0);去掉滚动条，因为可以使用鼠标滚轮了 ^_^
 (mouse-avoidance-mode 'animate);光标靠近鼠标指针时，让鼠标指针自动让开，别挡住视线。很好玩阿，这个功能
 (transient-mark-mode t);这个忘了，郁闷！
 (setq x-select-enable-clipboard t);支持emacs和外部程序的粘贴
@@ -217,7 +217,7 @@
 
 (auto-insert-mode)  ;;; Adds hook to find-files-hook
 (setq auto-insert-directory "~/.emacsd/templates/") ;;; Or use custom, *NOTE* Trailing slash important
-(setq auto-insert-query nil) ;;; If you don't want to be prompted before insertion
+(setq auto-insert-query 0) ;;; If you don't want to be prompted before insertion
 
 (setq auto-insert-alist
       (append '(
