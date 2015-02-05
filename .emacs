@@ -12,25 +12,37 @@
   ;; If there is more than one, they won't work right.
  )
 
+(defun set-exec-path-from-shell-PATH ()
+  "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell.
+
+This is particularly useful under Mac OSX, where GUI apps are not started from a shell."
+  (interactive)
+  (let ((path-from-shell (replace-regexp-in-string "[ \t\n]*$" "" (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
+
+(set-exec-path-from-shell-PATH)
+
+;(setenv "PATH" "/path/to/bin:$PATH" t)
 ;;need for muse-el and python-mode deb packages
 
-(set-default-font "DejaVu Sans Mono-10")
-(set-fontset-font "fontset-default"
-'han '("WenQuanYi Bitmap Song" . "unicode-bmp"))
-(set-fontset-font "fontset-default"
-'cjk-misc '("WenQuanYi Bitmap Song" . "unicode-bmp"))
-(set-fontset-font "fontset-default"
-'bopomofo '("WenQuanYi Bitmap Song" . "unicode-bmp"))
-(set-fontset-font "fontset-default"
-'gb18030 '("WenQuanYi Bitmap Song". "unicode-bmp"))
-(set-fontset-font "fontset-default"
-'symbol '("WenQuanYi Bitmap Song". "unicode-bmp"))
-(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10"))
+(set-default-font "DejaVu Sans Mono-14")
+;(set-fontset-font "fontset-default"
+;'han '("WenQuanYi Bitmap Song" . "unicode-bmp"))
+;(set-fontset-font "fontset-default"
+;'cjk-misc '("WenQuanYi Bitmap Song" . "unicode-bmp"))
+;(set-fontset-font "fontset-default"
+;'bopomofo '("WenQuanYi Bitmap Song" . "unicode-bmp"))
+;(set-fontset-font "fontset-default"
+;'gb18030 '("WenQuanYi Bitmap Song". "unicode-bmp"))
+;(set-fontset-font "fontset-default"
+;'symbol '("WenQuanYi Bitmap Song". "unicode-bmp"))
+(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-14"))
 ;;设置字体
 
 (setq default-frame-alist 
-'((top . 40) (left . 400) 
-(width . 170) (height . 60) 
+'((top . 30) (left . 200) 
+(width . 138) (height . 47) 
 ))
 ;;设置窗口大小
 
@@ -167,9 +179,9 @@
 (ac-config-default)
 ;;开启自动完成
 
-;(load-file "/home/mfs6174/.emacsd/multi-gdb-ui.el")
+(load-file "~/.emacsd/multi-gdb-ui.el")
 (require 'gud)
-(global-set-key [(C-f8)] 'gdb)
+(global-set-key [(C-f8)] 'gud-gdb)
 ;;开启gdb
 
 (global-set-key (kbd "C-k") 'kill-whole-line)
