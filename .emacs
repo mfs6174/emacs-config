@@ -23,6 +23,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 (set-exec-path-from-shell-PATH)
 
+
 ;(setenv "PATH" "/path/to/bin:$PATH" t)
 ;;need for muse-el and python-mode deb packages
 
@@ -66,8 +67,9 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (global-linum-mode t);;设置显示行号
 
 (add-to-list 'load-path "~/.emacsd")
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp") ; add homebrew emacs package locaition
 ;;加载目录
-
+(require 'tex-site)  ;add auctex
 (add-hook 'shell-mode-hook 'wcy-shell-mode-hook-func)
 (defun wcy-shell-mode-hook-func  ()
   (set-process-sentinel (get-buffer-process (current-buffer))
