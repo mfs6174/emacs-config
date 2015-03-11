@@ -1,15 +1,17 @@
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(cua-mode t nil (cua-base))
- '(gdb-show-main nil))
+ '(gdb-show-main nil)
+ '(inhibit-startup-screen t)
+ '(matlab-shell-command-switches (quote ("-nodesktop -nosplash"))))
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  )
 
 ;;need for muse-el and python-mode deb packages
@@ -259,8 +261,7 @@
             (auto-complete-mode 1)
 	    (c-toggle-hungry-state 1)
             ))
-(custom-set-variables
- '(matlab-shell-command-switches '("-nodesktop -nosplash")))
+
 (add-hook 'matlab-mode-hook 'auto-complete-mode)
 (setq auto-mode-alist
       (cons
