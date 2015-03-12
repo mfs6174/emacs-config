@@ -18,15 +18,15 @@
 
 (set-default-font "DejaVu Sans Mono-10")
 (set-fontset-font "fontset-default"
-'han '("WenQuanYi Bitmap Song" . "unicode-bmp"))
+'han '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
 (set-fontset-font "fontset-default"
-'cjk-misc '("WenQuanYi Bitmap Song" . "unicode-bmp"))
+'cjk-misc '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
 (set-fontset-font "fontset-default"
-'bopomofo '("WenQuanYi Bitmap Song" . "unicode-bmp"))
+'bopomofo '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
 (set-fontset-font "fontset-default"
-'gb18030 '("WenQuanYi Bitmap Song". "unicode-bmp"))
+'gb18030 '("WenQuanYi Micro Hei Mono". "unicode-bmp"))
 (set-fontset-font "fontset-default"
-'symbol '("WenQuanYi Bitmap Song". "unicode-bmp"))
+'symbol '("WenQuanYi Micro Hei Mono". "unicode-bmp"))
 (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10"))
 ;;设置字体
 
@@ -169,9 +169,10 @@
 (ac-config-default)
 ;;开启自动完成
 
-;(load-file "/home/mfs6174/.emacsd/multi-gdb-ui.el")
+
+(load-file "~/.emacsd/multi-gdb-ui.el")
 (require 'gud)
-(global-set-key [(C-f8)] 'gdb)
+(global-set-key [(C-f8)] 'gud-gdb)
 ;;开启gdb
 
 (global-set-key (kbd "C-k") 'kill-whole-line)
