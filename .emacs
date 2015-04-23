@@ -71,6 +71,9 @@
       (kill-buffer (current-buffer))))
 ;;使shell能够自动退出
 
+(define-coding-system-alias 'UTF-8 'utf-8)
+(define-coding-system-alias 'GBK 'gbk)
+
 (autoload 'markdown-mode "markdown-mode"
 	"Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'". markdown-mode))
