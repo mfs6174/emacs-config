@@ -288,10 +288,13 @@
 )
 (global-set-key [(C-f9)] 'quick-compile)  ;;快捷键C-F9
 
+(setq opencv_debian "g++ -g  -Wall `pkg-config --libs --cflags opencv` -lopencv_nonfree -o ")
+(setq opencv_local  "g++ -Wl,-rpath,/usr/local/lib/ -g  -Wall -I/usr/local/include/ /usr/local/lib/libopencv_calib3d.so  /usr/local/lib/libopencv_contrib.so  /usr/local/lib/libopencv_core.so  /usr/local/lib/libopencv_features2d.so  /usr/local/lib/libopencv_flann.so  /usr/local/lib/libopencv_gpu.so  /usr/local/lib/libopencv_highgui.so  /usr/local/lib/libopencv_imgproc.so  /usr/local/lib/libopencv_legacy.so  /usr/local/lib/libopencv_ml.so  /usr/local/lib/libopencv_objdetect.so  /usr/local/lib/libopencv_ocl.so  /usr/local/lib/libopencv_photo.so  /usr/local/lib/libopencv_stitching.so  /usr/local/lib/libopencv_superres.so    /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so  -o ")
 (defun quick-compile-opencv ()
 "A quick compile funciton for codes with OpenCV"
 (interactive)
-(compile (concat "g++ -g  -Wall `pkg-config --libs --cflags opencv` -lopencv_nonfree -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(compile (concat opencv_local  (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+;;(compile (concat "g++ -g  -Wall `pkg-config --libs --cflags opencv` -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ))
 (other-window 1)
 )
 (global-set-key [(C-S-f9)] 'quick-compile-opencv)
