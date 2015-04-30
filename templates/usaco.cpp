@@ -28,4 +28,6 @@ ifstream inf("ti.in");
 //freopen("ti.in","r",stdin);
 const int maxlongint=2147483647;
 
-
+int main(int argc, char *argv[])
+{
+  

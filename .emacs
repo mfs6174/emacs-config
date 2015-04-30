@@ -1,15 +1,17 @@
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(cua-mode t nil (cua-base))
- '(gdb-show-main nil))
+ '(gdb-show-main nil)
+ '(inhibit-startup-screen t)
+ '(matlab-shell-command-switches (quote ("-nodesktop -nosplash"))))
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  )
 
 (defun set-exec-path-from-shell-PATH ()
@@ -26,6 +28,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;(setenv "PATH" "/path/to/bin:$PATH" t)
 ;;need for muse-el and python-mode deb packages
+
 
 (set-default-font "DejaVu Sans Mono-14")
 ;(set-fontset-font "fontset-default"
@@ -58,8 +61,8 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (display-time-mode 1);显示时间，格式如下
 (setq display-time-24hr-format t)
 (setq display-time-day-and-date t)
-(tool-bar-mode 0);去掉那个大大的工具栏
-(scroll-bar-mode 0);去掉滚动条，因为可以使用鼠标滚轮了 ^_^
+;;(tool-bar-mode 0);去掉那个大大的工具栏
+;;(scroll-bar-mode 0);去掉滚动条，因为可以使用鼠标滚轮了 ^_^
 (mouse-avoidance-mode 'animate);光标靠近鼠标指针时，让鼠标指针自动让开，别挡住视线。很好玩阿，这个功能
 (transient-mark-mode t);这个忘了，郁闷！
 (setq x-select-enable-clipboard t);支持emacs和外部程序的粘贴
@@ -82,6 +85,9 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
        (string-match "finished" state))
       (kill-buffer (current-buffer))))
 ;;使shell能够自动退出
+
+(define-coding-system-alias 'UTF-8 'utf-8)
+(define-coding-system-alias 'GBK 'gbk)
 
 (autoload 'markdown-mode "markdown-mode"
 	"Major mode for editing Markdown files" t)
@@ -273,8 +279,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
             (auto-complete-mode 1)
 	    (c-toggle-hungry-state 1)
             ))
-(custom-set-variables
- '(matlab-shell-command-switches '("-nodesktop -nosplash")))
+
 (add-hook 'matlab-mode-hook 'auto-complete-mode)
 (setq auto-mode-alist
       (cons
@@ -300,9 +305,12 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 )
 (global-set-key [(C-f9)] 'quick-compile)  ;;快捷键C-F9
 
+(setq opencv_debian "g++ -g  -Wall `pkg-config --libs --cflags opencv` -lopencv_nonfree -o ")
+(setq opencv_local  "g++ -Wl,-rpath,/usr/local/lib/ -g  -Wall -I/usr/local/include/ /usr/local/lib/libopencv_calib3d.so  /usr/local/lib/libopencv_contrib.so  /usr/local/lib/libopencv_core.so  /usr/local/lib/libopencv_features2d.so  /usr/local/lib/libopencv_flann.so  /usr/local/lib/libopencv_gpu.so  /usr/local/lib/libopencv_highgui.so  /usr/local/lib/libopencv_imgproc.so  /usr/local/lib/libopencv_legacy.so  /usr/local/lib/libopencv_ml.so  /usr/local/lib/libopencv_objdetect.so  /usr/local/lib/libopencv_ocl.so  /usr/local/lib/libopencv_photo.so  /usr/local/lib/libopencv_stitching.so  /usr/local/lib/libopencv_superres.so    /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so  -o ")
 (defun quick-compile-opencv ()
 "A quick compile funciton for codes with OpenCV"
 (interactive)
+
 (compile (concat "g++ -g  -Wall `pkg-config --libs --cflags opencv`  -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
