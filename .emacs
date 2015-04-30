@@ -303,7 +303,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (defun quick-compile-opencv ()
 "A quick compile funciton for codes with OpenCV"
 (interactive)
-(compile (concat "g++ -g  -Wall `pkg-config --libs --cflags opencv` -lopencv_nonfree -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(compile (concat "g++ -g  -Wall `pkg-config --libs --cflags opencv`  -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
 (global-set-key [(C-S-f9)] 'quick-compile-opencv)
