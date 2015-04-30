@@ -61,8 +61,8 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (display-time-mode 1);显示时间，格式如下
 (setq display-time-24hr-format t)
 (setq display-time-day-and-date t)
-;;(tool-bar-mode 0);去掉那个大大的工具栏
-;;(scroll-bar-mode 0);去掉滚动条，因为可以使用鼠标滚轮了 ^_^
+(tool-bar-mode 0);去掉那个大大的工具栏
+(scroll-bar-mode 0);去掉滚动条，因为可以使用鼠标滚轮了 ^_^
 (mouse-avoidance-mode 'animate);光标靠近鼠标指针时，让鼠标指针自动让开，别挡住视线。很好玩阿，这个功能
 (transient-mark-mode t);这个忘了，郁闷！
 (setq x-select-enable-clipboard t);支持emacs和外部程序的粘贴
