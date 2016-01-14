@@ -80,6 +80,9 @@
 (add-to-list 'auto-mode-alist '("\\.md\\'". markdown-mode))
 ;;开启markdown模式
 
+(require 'cuda-mode)
+;;use cuda mode
+
 ;;所以我们不再使用muse模式
 ;; (require 'muse-mode)
 ;; ;; Load publishing style
@@ -286,13 +289,13 @@
 (defun quick-compile ()
 "A quick compile funciton for C++"
 (interactive)
-(compile (concat "g++ -g  -O0 -Wall -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(compile (concat "g++ -std=c++11 -g  -O0 -Wall -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
 (global-set-key [(C-f9)] 'quick-compile)  ;;快捷键C-F9
 
-(setq opencv_debian "g++ -g  -Wall `pkg-config --libs --cflags opencv` -lopencv_nonfree -o ")
-(setq opencv_local  "g++ -Wl,-rpath,/usr/local/lib/ -g  -Wall -I/usr/local/include/ /usr/local/lib/libopencv_calib3d.so  /usr/local/lib/libopencv_contrib.so  /usr/local/lib/libopencv_core.so  /usr/local/lib/libopencv_features2d.so  /usr/local/lib/libopencv_flann.so  /usr/local/lib/libopencv_gpu.so  /usr/local/lib/libopencv_highgui.so  /usr/local/lib/libopencv_imgproc.so  /usr/local/lib/libopencv_legacy.so  /usr/local/lib/libopencv_ml.so  /usr/local/lib/libopencv_objdetect.so  /usr/local/lib/libopencv_ocl.so  /usr/local/lib/libopencv_photo.so  /usr/local/lib/libopencv_stitching.so  /usr/local/lib/libopencv_superres.so    /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so  -o ")
+(setq opencv_debian "g++ -std=c++11 -g  -Wall `pkg-config --libs --cflags opencv` -lopencv_nonfree -o ")
+(setq opencv_local  "g++ -std=c++11 -Wl,-rpath,/usr/local/lib/ -g  -Wall -I/usr/local/include/ -lopencv_nonfree /usr/local/lib/libopencv_calib3d.so  /usr/local/lib/libopencv_contrib.so  /usr/local/lib/libopencv_core.so  /usr/local/lib/libopencv_features2d.so  /usr/local/lib/libopencv_flann.so  /usr/local/lib/libopencv_gpu.so  /usr/local/lib/libopencv_highgui.so  /usr/local/lib/libopencv_imgproc.so  /usr/local/lib/libopencv_legacy.so  /usr/local/lib/libopencv_ml.so  /usr/local/lib/libopencv_objdetect.so  /usr/local/lib/libopencv_ocl.so  /usr/local/lib/libopencv_photo.so  /usr/local/lib/libopencv_stitching.so  /usr/local/lib/libopencv_superres.so    /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so  -o ")
 (defun quick-compile-opencv ()
 "A quick compile funciton for codes with OpenCV"
 (interactive)
@@ -309,6 +312,14 @@
 (other-window 1)
 )
 (global-set-key [(C-S-f10)] 'quick-compile-opengl)
+
+(defun quick-compile-mixed ()
+"A quick compile funciton for codes with OpenGL(glew and glfw) and OpenCV (for now)"
+(interactive)
+(compile (concat "g++ -g  -Wall `pkg-config --libs --cflags glfw3 glew opencv` -lopencv_nonfree -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(other-window 1)
+)
+(global-set-key [(C-S-f11)] 'quick-compile-mixed)
 
 
 (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
@@ -336,9 +347,16 @@
 )
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
+ (add-hook 'LaTeX-mode-hook (lambda()
+ 			     (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+;; 			     (setq TeX-command-default "XeLaTeX")
+ 			     (setq TeX-save-query  nil )
+ 			     (setq TeX-show-compilation t)
+			     ))
+
 (add-hook 'LaTeX-mode-hook (lambda()
-			     (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
-			     (setq TeX-command-default "XeLaTeX")
+			     (add-to-list 'TeX-command-list '("pdfLaTeX" "%`pdflatex%(mode)%' %t" TeX-run-TeX nil t))
+			     (setq TeX-command-default "pdfLaTeX")
 			     (setq TeX-save-query  nil )
 			     (setq TeX-show-compilation t)
 			     ))
