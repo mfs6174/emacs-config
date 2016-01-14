@@ -83,6 +83,9 @@
 (require 'cuda-mode)
 ;;use cuda mode
 
+(require 'protobuf-mode)
+;;use protobuf mode
+
 ;;所以我们不再使用muse模式
 ;; (require 'muse-mode)
 ;; ;; Load publishing style
