@@ -16,6 +16,9 @@
 
 ;;need for muse-el and python-mode deb packages
 
+; C-t 设置标记
+(global-set-key (kbd "C-t") 'set-mark-command)
+
 (set-default-font "DejaVu Sans Mono-10")
 (set-fontset-font "fontset-default"
 'han '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
@@ -70,6 +73,18 @@
        (string-match "finished" state))
       (kill-buffer (current-buffer))))
 ;;使shell能够自动退出
+
+(defun my-multi-shell ()
+  (interactive)
+  (if  (string-match "*shell*" (buffer-name))
+  (rename-buffer "*shell*_m" 1)
+  )
+  (shell)
+  (rename-buffer "*shell*_m" 1)
+  )
+;;rename shell buffer, and open new; if current is not shell, just open new shell
+(global-set-key (kbd "C-c s") 'my-multi-shell)
+;;C-c o to open new shell
 
 (define-coding-system-alias 'UTF-8 'utf-8)
 (define-coding-system-alias 'GBK 'gbk)
@@ -297,16 +312,16 @@
 )
 (global-set-key [(C-f9)] 'quick-compile)  ;;快捷键C-F9
 
-(setq opencv_debian "g++ -std=c++11 -g  -Wall `pkg-config --libs --cflags opencv` -lopencv_nonfree -o ")
+(setq opencv_debian_nonfree "g++ -std=c++11 -g  -Wall `pkg-config --libs --cflags opencv` -lopencv_nonfree -o ")
+(setq opencv_debian "g++ -std=c++11 -g  -Wall `pkg-config --libs --cflags opencv`  -o ")
 (setq opencv_local  "g++ -std=c++11 -Wl,-rpath,/usr/local/lib/ -g  -Wall -I/usr/local/include/ -lopencv_nonfree /usr/local/lib/libopencv_calib3d.so  /usr/local/lib/libopencv_contrib.so  /usr/local/lib/libopencv_core.so  /usr/local/lib/libopencv_features2d.so  /usr/local/lib/libopencv_flann.so  /usr/local/lib/libopencv_gpu.so  /usr/local/lib/libopencv_highgui.so  /usr/local/lib/libopencv_imgproc.so  /usr/local/lib/libopencv_legacy.so  /usr/local/lib/libopencv_ml.so  /usr/local/lib/libopencv_objdetect.so  /usr/local/lib/libopencv_ocl.so  /usr/local/lib/libopencv_photo.so  /usr/local/lib/libopencv_stitching.so  /usr/local/lib/libopencv_superres.so    /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so  -o ")
 (defun quick-compile-opencv ()
 "A quick compile funciton for codes with OpenCV"
 (interactive)
-(compile (concat opencv_local  (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
-;;(compile (concat "g++ -g  -Wall `pkg-config --libs --cflags opencv` -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ))
+(compile (concat opencv_debian  (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
-(global-set-key [(C-S-f9)] 'quick-compile-opencv)
+(global-set-key (kbd "C-c 9") 'quick-compile-opencv)
 
 (defun quick-compile-opengl ()
 "A quick compile funciton for codes with OpenGL(glew and glfw)"
@@ -314,7 +329,7 @@
 (compile (concat "g++ -g  -Wall `pkg-config --libs --cflags glfw3 glew` -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
-(global-set-key [(C-S-f10)] 'quick-compile-opengl)
+(global-set-key (kbd "C-c 10") 'quick-compile-opengl)
 
 (defun quick-compile-mixed ()
 "A quick compile funciton for codes with OpenGL(glew and glfw) and OpenCV (for now)"
@@ -322,7 +337,7 @@
 (compile (concat "g++ -g  -Wall `pkg-config --libs --cflags glfw3 glew opencv` -lopencv_nonfree -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
-(global-set-key [(C-S-f11)] 'quick-compile-mixed)
+(global-set-key (kbd "C-c 11") 'quick-compile-mixed)
 
 
 (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
