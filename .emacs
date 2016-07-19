@@ -16,6 +16,9 @@
 
 ;;need for muse-el and python-mode deb packages
 
+(define-key python-mode-map (kbd "C-c l") 'python-indent-shift-left)
+(define-key python-mode-map (kbd "C-c r") 'python-indent-shift-right)
+
 ; C-t 设置标记
 (global-set-key (kbd "C-t") 'set-mark-command)
 
@@ -60,6 +63,27 @@
 
 (add-to-list 'load-path "~/.emacsd")
 ;;加载目录
+
+;;shell config
+(require 'bash-completion)
+(require 'ansi-color)
+(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on t)
+(add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
+;; set up ansi color
+
+(autoload 'bash-completion-dynamic-complete
+  "bash-completion"
+  "BASH completion hook")
+(add-hook 'shell-dynamic-complete-functions
+	  'bash-completion-dynamic-complete)
+;;load bash completion
+
+(add-hook 'shell-mode-hook 'my-shell-mode-hook)
+(defun my-shell-mode-hook ()
+  (setq comint-input-ring-file-name "~/.bash_history")  ;; or bash_history
+  (comint-read-input-ring t))
+;;share bash history
 
 (add-hook 'shell-mode-hook 'wcy-shell-mode-hook-func)
 (defun wcy-shell-mode-hook-func  ()
@@ -238,7 +262,7 @@
   (insert "//")
 )
 ;;(global-unset-key "\C-/")
-(global-set-key (kbd "C-/") 'jumozhushi)
+(define-key c-mode-base-map (kbd "C-/") 'jumozhushi)
 ;;快速添加注释块 自定义函数
 
 
@@ -304,40 +328,42 @@
 
 
 ;;一键快速编译 C++-mode 自定义函数
+(setq CPP_naive "g++ -std=c++11 -g  -O0 -Wall ")
+(setq CPP_full "g++ -std=c++11 -g  -O3 -Wall -fopenmp " )
 (defun quick-compile ()
 "A quick compile funciton for C++"
 (interactive)
-(compile (concat "g++ -std=c++11 -g  -O0 -Wall -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(compile (concat CPP_naive " -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
-(global-set-key [(C-f9)] 'quick-compile)  ;;快捷键C-F9
+(define-key c-mode-base-map (kbd "C-c 8") 'quick-compile)  ;;快捷键C-F9
 
-(setq opencv_debian_nonfree "g++ -std=c++11 -g  -Wall `pkg-config --libs --cflags opencv` -lopencv_nonfree -o ")
-(setq opencv_debian "g++ -std=c++11 -g  -Wall `pkg-config --libs --cflags opencv`  -o ")
-(setq opencv_local  "g++ -std=c++11 -Wl,-rpath,/usr/local/lib/ -g  -Wall -I/usr/local/include/ -lopencv_nonfree /usr/local/lib/libopencv_calib3d.so  /usr/local/lib/libopencv_contrib.so  /usr/local/lib/libopencv_core.so  /usr/local/lib/libopencv_features2d.so  /usr/local/lib/libopencv_flann.so  /usr/local/lib/libopencv_gpu.so  /usr/local/lib/libopencv_highgui.so  /usr/local/lib/libopencv_imgproc.so  /usr/local/lib/libopencv_legacy.so  /usr/local/lib/libopencv_ml.so  /usr/local/lib/libopencv_objdetect.so  /usr/local/lib/libopencv_ocl.so  /usr/local/lib/libopencv_photo.so  /usr/local/lib/libopencv_stitching.so  /usr/local/lib/libopencv_superres.so    /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so  -o ")
+(setq opencv_debian_nonfree " `pkg-config --libs --cflags opencv` -lopencv_nonfree ")
+(setq opencv_debian " `pkg-config --libs --cflags opencv` ")
+(setq opencv_local  " -Wl,-rpath,/usr/local/lib/ -g  -Wall -I/usr/local/include/ -lopencv_nonfree /usr/local/lib/libopencv_calib3d.so  /usr/local/lib/libopencv_contrib.so  /usr/local/lib/libopencv_core.so  /usr/local/lib/libopencv_features2d.so  /usr/local/lib/libopencv_flann.so  /usr/local/lib/libopencv_gpu.so  /usr/local/lib/libopencv_highgui.so  /usr/local/lib/libopencv_imgproc.so  /usr/local/lib/libopencv_legacy.so  /usr/local/lib/libopencv_ml.so  /usr/local/lib/libopencv_objdetect.so  /usr/local/lib/libopencv_ocl.so  /usr/local/lib/libopencv_photo.so  /usr/local/lib/libopencv_stitching.so  /usr/local/lib/libopencv_superres.so    /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so ")
 (defun quick-compile-opencv ()
 "A quick compile funciton for codes with OpenCV"
 (interactive)
-(compile (concat opencv_debian  (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(compile (concat CPP_full opencv_debian " -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
-(global-set-key (kbd "C-c 9") 'quick-compile-opencv)
+(define-key c-mode-base-map (kbd "C-c 9") 'quick-compile-opencv)
 
 (defun quick-compile-opengl ()
 "A quick compile funciton for codes with OpenGL(glew and glfw)"
 (interactive)
-(compile (concat "g++ -g  -Wall `pkg-config --libs --cflags glfw3 glew` -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(compile (concat CPP_full " `pkg-config --libs --cflags glfw3 glew` -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
-(global-set-key (kbd "C-c 10") 'quick-compile-opengl)
+(define-key c-mode-base-map (kbd "C-c 10") 'quick-compile-opengl)
 
 (defun quick-compile-mixed ()
 "A quick compile funciton for codes with OpenGL(glew and glfw) and OpenCV (for now)"
 (interactive)
-(compile (concat "g++ -g  -Wall `pkg-config --libs --cflags glfw3 glew opencv` -lopencv_nonfree -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(compile (concat CPP_full " `pkg-config --libs --cflags glfw3 glew opencv` -lopencv_nonfree -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
-(global-set-key (kbd "C-c 11") 'quick-compile-mixed)
+(define-key c-mode-base-map (kbd "C-c 11") 'quick-compile-mixed)
 
 
 (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
