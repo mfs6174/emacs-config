@@ -15,9 +15,10 @@
  )
 
 ;;need for muse-el and python-mode deb packages
-
-(define-key python-mode-map (kbd "C-c l") 'python-indent-shift-left)
-(define-key python-mode-map (kbd "C-c r") 'python-indent-shift-right)
+(with-eval-after-load "python"
+(define-key python-mode-map (kbd "M-c") 'python-indent-shift-left)
+(define-key python-mode-map (kbd "M-v") 'python-indent-shift-right)
+)
 
 ; C-t 设置标记
 (global-set-key (kbd "C-t") 'set-mark-command)
