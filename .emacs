@@ -330,7 +330,7 @@
 
 ;;一键快速编译 C++-mode 自定义函数
 (setq CPP_naive "g++ -std=c++11 -g  -O0 -Wall ")
-(setq CPP_full "g++ -std=c++11 -g  -O3 -Wall -fopenmp " )
+(setq CPP_full "g++ -std=c++11 -g  -O2 -Wall -fopenmp " )
 (defun quick-compile ()
 "A quick compile funciton for C++"
 (interactive)
