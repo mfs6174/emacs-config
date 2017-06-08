@@ -69,6 +69,11 @@
 (when (featurep 'choose-mode)
 (push '("\\.h\\'" . choose-mode-for-dot-h) auto-mode-alist)
 (push '("\\.m\\'" . choose-mode-for-dot-m) auto-mode-alist))
+(setq auto-mode-alist
+      (cons
+       '("\\.mm$" . objc-mode)
+       auto-mode-alist))
+;;objc模式
 
 ;;shell config
 (require 'bash-completion)
