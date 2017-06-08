@@ -65,6 +65,11 @@
 (add-to-list 'load-path "~/.emacsd")
 ;;加载目录
 
+(require 'choose-mode)
+(when (featurep 'choose-mode)
+(push '("\\.h\\'" . choose-mode-for-dot-h) auto-mode-alist)
+(push '("\\.m\\'" . choose-mode-for-dot-m) auto-mode-alist))
+
 ;;shell config
 (require 'bash-completion)
 (require 'ansi-color)
@@ -216,7 +221,11 @@
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacsd/dict")
 (ac-config-default)
+(global-auto-complete-mode t)
+(global-set-key (kbd "C-b") 'auto-complete)
 ;;开启自动完成
+(setq ac-fuzzy-enable nil)
+;(set-default 'ac-sources '(ac-source-abbrev ac-source-words-in-buffer)) 
 
 
 (load-file "~/.emacsd/multi-gdb-ui.el")
@@ -313,10 +322,10 @@
             ))
 
 (add-hook 'matlab-mode-hook 'auto-complete-mode)
-(setq auto-mode-alist
-      (cons
-       '("\\.m$" . matlab-mode)
-       auto-mode-alist))
+;;(setq auto-mode-alist
+;;      (cons
+;;       '("\\.m$" . matlab-mode)
+;;       auto-mode-alist))
 ;;matlab模式
 
 ;;twit插件 平时不用所以注释掉加快速度
