@@ -14,11 +14,16 @@
  ;; If there is more than one, they won't work right.
  )
 
+;(setq server-use-tcp t)
+
 ;;need for muse-el and python-mode deb packages
 (with-eval-after-load "python"
 (define-key python-mode-map (kbd "M-c") 'python-indent-shift-left)
 (define-key python-mode-map (kbd "M-v") 'python-indent-shift-right)
 )
+;; Python Hook
+(add-hook 'python-mode-hook
+	  (lambda () (setq python-indent-offset 4)))
 
 ; C-t 设置标记
 (global-set-key (kbd "C-t") 'set-mark-command)
@@ -357,13 +362,24 @@
 (setq opencv_debian_nonfree " `pkg-config --libs --cflags opencv` -lopencv_nonfree ")
 (setq opencv_debian " `pkg-config --libs --cflags opencv` ")
 (setq opencv_local  " -Wl,-rpath,/usr/local/lib/ -g  -Wall -I/usr/local/include/ -lopencv_nonfree /usr/local/lib/libopencv_calib3d.so  /usr/local/lib/libopencv_contrib.so  /usr/local/lib/libopencv_core.so  /usr/local/lib/libopencv_features2d.so  /usr/local/lib/libopencv_flann.so  /usr/local/lib/libopencv_gpu.so  /usr/local/lib/libopencv_highgui.so  /usr/local/lib/libopencv_imgproc.so  /usr/local/lib/libopencv_legacy.so  /usr/local/lib/libopencv_ml.so  /usr/local/lib/libopencv_objdetect.so  /usr/local/lib/libopencv_ocl.so  /usr/local/lib/libopencv_photo.so  /usr/local/lib/libopencv_stitching.so  /usr/local/lib/libopencv_superres.so    /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so ")
+(setq opencv_31_local " -I/home/zhangxijin/.local/include/opencv -I/home/zhangxijin/.local/include -Wl,-rpath,/home/zhangxijin/.local/lib -L/home/zhangxijin/.local/lib -lopencv_shape -lopencv_stitching -lopencv_objdetect -lopencv_superres -lopencv_videostab -lopencv_calib3d -lopencv_features2d -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_video -lopencv_photo -lopencv_ml -lopencv_imgproc -lopencv_flann -lopencv_core  ")
+(setq pcl_17_debian " -L/usr/lib/x86_64-linux-gnu/ `pkg-config --libs --cflags pcl_apps-1.7 pcl_common-1.7 pcl_features-1.7 pcl_filters-1.7 pcl_geometry-1.7 pcl_io-1.7 pcl_kdtree-1.7 pcl_keypoints-1.7 pcl_octree-1.7 pcl_registration-1.7 pcl_sample_consensus-1.7 pcl_search-1.7 pcl_segmentation-1.7 pcl_surface-1.7 pcl_tracking-1.7 pcl_visualization-1.7  flann` -lboost_system ")
+
 (defun quick-compile-opencv ()
 "A quick compile funciton for codes with OpenCV"
 (interactive)
-(compile (concat CPP_full opencv_debian " -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(compile (concat CPP_full opencv_31_local " -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
 (other-window 1)
 )
 (define-key c-mode-base-map (kbd "C-c 9") 'quick-compile-opencv)
+
+(defun quick-compile-pcl ()
+"A quick compile funciton for codes with PCL"
+(interactive)
+(compile (concat CPP_full pcl_17_debian " -o " (buffer-name (current-buffer)) ".out  " (buffer-name (current-buffer)) ));;-coverage
+(other-window 1)
+)
+(define-key c-mode-base-map (kbd "C-c 7") 'quick-compile-pcl)
 
 (defun quick-compile-opengl ()
 "A quick compile funciton for codes with OpenGL(glew and glfw)"
