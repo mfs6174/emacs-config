@@ -80,6 +80,10 @@
        auto-mode-alist))
 ;;objc模式
 
+(require
+ 'swift-mode)
+;;swift mode
+
 ;;shell config
 (require 'bash-completion)
 (require 'ansi-color)
@@ -87,7 +91,6 @@
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on t)
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 ;; set up ansi color
-
 (autoload 'bash-completion-dynamic-complete
   "bash-completion"
   "BASH completion hook")
@@ -113,6 +116,29 @@
        (string-match "finished" state))
       (kill-buffer (current-buffer))))
 ;;使shell能够自动退出
+
+;;(setq comint-terminfo-terminal "ansi")
+;; (setq comint-terminfo-terminal "dumb-emacs-ansi")
+
+;; (let* ((terminfo-file (format "~/.terminfo/%s.ti" comint-terminfo-terminal))
+;;        (default-directory (file-name-directory terminfo-file)))
+;;   (unless (file-exists-p terminfo-file)
+;;     (make-directory default-directory t)
+;;     (with-temp-buffer
+;;             (insert "dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
+;;     am,
+;;     colors#8, it#8, ncv#13, pairs#64,
+;;     bold=\\E[1m, cud1=^J, ht=^I, ind=^J, op=\\E[39;49m,
+;;     ritm=\\E[23m, rmul=\\E[24m, setab=\\E[4%p1%dm,
+;;     setaf=\\E[3%p1%dm, sgr0=\\E[m, sitm=\\E[3m, smul=\\E[4m,")
+;; 	    (write-file terminfo-file)))
+;;   (unless (file-exists-p (concat default-directory "d/" comint-terminfo-terminal))
+;;     (start-process "*tic process*" "*Messages*" "tic" (expand-file-name terminfo-file))))
+
+(add-hook 'shell-mode-hook 'my-shell-mode-hook-ansi-color)
+(defun my-shell-mode-hook-ansi-color ()
+  (process-send-string (get-buffer-process (current-buffer))
+		                              "export TERM=ansi\n "))
 
 (defun my-multi-shell ()
   (interactive)
