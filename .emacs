@@ -27,6 +27,7 @@
 
 ; C-t 设置标记
 (global-set-key (kbd "C-t") 'set-mark-command)
+(global-set-key (kbd "C-c C-r") 'rectangle-mark-mode)
 
 (set-default-font "DejaVu Sans Mono-10")
 (set-fontset-font "fontset-default"
