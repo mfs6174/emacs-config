@@ -1,10 +1,7 @@
 ;;; auto-complete-config.el --- auto-complete additional configuations
 
-;; Copyright (C) 2009, 2010  Tomohiro Matsuyama
-
-;; Author: Tomohiro Matsuyama <m2ym.pub@gmail.com>
-;; Keywords: convenience
-;; Version: 1.3.1
+;; Copyright (C) 2009-2010  Tomohiro Matsuyama
+;; Copyright (C) 2020-2023  Jen-Chieh Shen
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -21,14 +18,20 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
-(eval-when-compile
-  (require 'cl))
-
+(require 'cl-lib)
 (require 'auto-complete)
+
+(declare-function semantic-analyze-current-context "semantic/analyze")
+(declare-function semantic-tag-class "semantic/tag")
+(declare-function semantic-tag-function-arguments "semantic/tag")
+(declare-function semantic-format-tag-type "semantic/format")
+(declare-function semantic-format-tag-name "semantic/format")
+(declare-function yas-expand-snippet "yasnippet")
+(declare-function oref "eieio" (obj slot))
 
 
 
@@ -41,35 +44,36 @@
 (ac-clear-variable-every-10-minutes 'ac-imenu-index)
 
 (defun ac-imenu-candidates ()
-  (loop with i = 0
-        with stack = (progn
-                       (unless (local-variable-p 'ac-imenu-index)
-                         (make-local-variable 'ac-imenu-index))
-                       (or ac-imenu-index
-                           (setq ac-imenu-index
-                                 (ignore-errors
-                                   (with-no-warnings
-                                     (imenu--make-index-alist))))))
-        with result
-        while (and stack (or (not (integerp ac-limit))
-                             (< i ac-limit)))
-        for node = (pop stack)
-        if (consp node)
-        do
-        (let ((car (car node))
-              (cdr (cdr node)))
-          (if (consp cdr)
-              (mapc (lambda (child)
-                      (push child stack))
-                    cdr)
-            (when (and (stringp car)
-                       (string-match (concat "^" (regexp-quote ac-prefix)) car))
-              ;; Remove extra characters
-              (if (string-match "^.*\\(()\\|=\\|<>\\)$" car)
-                  (setq car (substring car 0 (match-beginning 1))))
-              (push car result)
-              (incf i))))
-        finally return (nreverse result)))
+  "No documentation."
+  (cl-loop with i = 0
+           with stack = (progn
+                          (unless (local-variable-p 'ac-imenu-index)
+                            (make-local-variable 'ac-imenu-index))
+                          (or ac-imenu-index
+                              (setq ac-imenu-index
+                                    (ignore-errors
+                                      (with-no-warnings
+                                        (imenu--make-index-alist))))))
+           with result
+           while (and stack (or (not (integerp ac-limit))
+                                (< i ac-limit)))
+           for node = (pop stack)
+           if (consp node)
+           do
+           (let ((car (car node))
+                 (cdr (cdr node)))
+             (if (consp cdr)
+                 (mapc (lambda (child)
+                         (push child stack))
+                       cdr)
+               (when (and (stringp car)
+                          (string-match (concat "^" (regexp-quote ac-prefix)) car))
+                 ;; Remove extra characters
+                 (if (string-match "^.*\\(()\\|=\\|<>\\)$" car)
+                     (setq car (substring car 0 (match-beginning 1))))
+                 (push car result)
+                 (cl-incf i))))
+           finally return (nreverse result)))
 
 (ac-define-source imenu
   '((depends imenu)
@@ -79,18 +83,19 @@
 ;; gtags
 
 (defface ac-gtags-candidate-face
-  '((t (:background "lightgray" :foreground "navy")))
+  '((t (:inherit ac-candidate-face :foreground "navy")))
   "Face for gtags candidate"
   :group 'auto-complete)
 
 (defface ac-gtags-selection-face
-  '((t (:background "navy" :foreground "white")))
+  '((t (:inherit ac-selection-face :background "navy")))
   "Face for the gtags selected candidate."
   :group 'auto-complete)
 
 (defun ac-gtags-candidate ()
+  "No documentation."
   (ignore-errors
-    (split-string (shell-command-to-string (format "global -ci %s" ac-prefix)) "\n")))
+    (split-string (shell-command-to-string (format "global -ciq %s" ac-prefix)) "\n")))
 
 (ac-define-source gtags
   '((candidates . ac-gtags-candidate)
@@ -102,16 +107,18 @@
 ;; yasnippet
 
 (defface ac-yasnippet-candidate-face
-  '((t (:background "sandybrown" :foreground "black")))
+  '((t (:inherit ac-candidate-face
+                 :background "sandybrown" :foreground "black")))
   "Face for yasnippet candidate."
   :group 'auto-complete)
 
 (defface ac-yasnippet-selection-face
-  '((t (:background "coral3" :foreground "white")))
+  '((t (:inherit ac-selection-face :background "coral3")))
   "Face for the yasnippet selected candidate."
   :group 'auto-complete)
 
 (defun ac-yasnippet-table-hash (table)
+  "No documentation, TABLE."
   (cond
    ((fboundp 'yas/snippet-table-hash)
     (yas/snippet-table-hash table))
@@ -119,6 +126,7 @@
     (yas/table-hash table))))
 
 (defun ac-yasnippet-table-parent (table)
+  "No documentation, TABLE."
   (cond
    ((fboundp 'yas/snippet-table-parent)
     (yas/snippet-table-parent table))
@@ -126,6 +134,7 @@
     (yas/table-parent table))))
 
 (defun ac-yasnippet-candidate-1 (table)
+  "No documentation, TABLE."
   (with-no-warnings
     (let ((hashtab (ac-yasnippet-table-hash table))
           (parent (ac-yasnippet-table-parent table))
@@ -134,24 +143,34 @@
                  (push key candidates))
                hashtab)
       (setq candidates (all-completions ac-prefix (nreverse candidates)))
-      (if parent
-          (setq candidates
-                (append candidates (ac-yasnippet-candidate-1 parent))))
+      (when parent
+        (setq candidates
+              (append candidates (ac-yasnippet-candidate-1 parent))))
       candidates)))
 
 (defun ac-yasnippet-candidates ()
+  "No documentation."
   (with-no-warnings
-    (if (fboundp 'yas/get-snippet-tables)
-        ;; >0.6.0
-        (apply 'append (mapcar 'ac-yasnippet-candidate-1 (yas/get-snippet-tables major-mode)))
-      (let ((table
-             (if (fboundp 'yas/snippet-table)
-                 ;; <0.6.0
-                 (yas/snippet-table major-mode)
-               ;; 0.6.0
-               (yas/current-snippet-table))))
-        (if table
-            (ac-yasnippet-candidate-1 table))))))
+    (cond (;; 0.8 onwards
+           (fboundp 'yas-active-keys)
+           (all-completions ac-prefix (yas-active-keys)))
+          (;; >0.6.0
+           (fboundp 'yas/get-snippet-tables)
+           (apply 'append (mapcar 'ac-yasnippet-candidate-1
+                                  (condition-case nil
+                                      (yas/get-snippet-tables major-mode)
+                                    (wrong-number-of-arguments
+                                     (yas/get-snippet-tables)))))
+           )
+          (t
+           (let ((table
+                  (if (fboundp 'yas/snippet-table)
+                      ;; <0.6.0
+                      (yas/snippet-table major-mode)
+                    ;; 0.6.0
+                    (yas/current-snippet-table))))
+             (when table
+               (ac-yasnippet-candidate-1 table)))))))
 
 (ac-define-source yasnippet
   '((depends yasnippet)
@@ -164,19 +183,57 @@
 ;; semantic
 
 (defun ac-semantic-candidates (prefix)
+  "No documentation, PREFIX."
   (with-no-warnings
     (delete ""            ; semantic sometimes returns an empty string
-            (mapcar 'semantic-tag-name
+            (mapcar (lambda (elem)
+                      (cons (semantic-tag-name elem)
+                            (semantic-tag-clone elem)))
                     (ignore-errors
                       (or (semantic-analyze-possible-completions
                            (semantic-analyze-current-context))
                           (senator-find-tag-for-completion prefix)))))))
 
+(defun ac-semantic-doc (symbol)
+  "No documentation, SYMBOL."
+  (with-no-warnings
+    (let* ((proto (semantic-format-tag-summarize-with-file symbol nil t))
+           (doc (semantic-documentation-for-tag symbol))
+           (res proto))
+      (when doc
+        (setq res (concat res "\n\n" doc)))
+      res)))
+
+(defun ac-semantic-action ()
+  "No documentation."
+  (when (and (boundp 'yas-minor-mode) yas-minor-mode)
+    (let* ((tag (car (last (oref (semantic-analyze-current-context) prefix))))
+           (class (semantic-tag-class tag))
+           (args))
+      (when (eq class 'function)
+        (setq args (semantic-tag-function-arguments tag))
+        (yas-expand-snippet
+         (concat "("
+                 (mapconcat
+                  (lambda (arg)
+                    (let ((arg-type (semantic-format-tag-type arg nil))
+                          (arg-name (semantic-format-tag-name arg nil)))
+                      (concat "${"
+                              (if (string= arg-name "")
+                                  arg-type
+                                (concat arg-type " " arg-name))
+                              "}")))
+                  args
+                  ", ")
+                 ")$0"))))))
+
 (ac-define-source semantic
   '((available . (or (require 'semantic-ia nil t)
                      (require 'semantic/ia nil t)))
     (candidates . (ac-semantic-candidates ac-prefix))
-    (prefix . c-dot-ref)
+    (document . ac-semantic-doc)
+    (action . ac-semantic-action)
+    (prefix . cc-member)
     (requires . 0)
     (symbol . "m")))
 
@@ -184,14 +241,17 @@
   '((available . (or (require 'semantic-ia nil t)
                      (require 'semantic/ia nil t)))
     (candidates . (ac-semantic-candidates ac-prefix))
+    (document . ac-semantic-doc)
+    (action . ac-semantic-action)
     (symbol . "s")))
 
 ;; eclim
 
 (defun ac-eclim-candidates ()
+  "No documentation."
   (with-no-warnings
-    (loop for c in (eclim/java-complete)
-          collect (nth 1 c))))
+    (cl-loop for c in (eclim/java-complete)
+             collect (nth 1 c))))
 
 (ac-define-source eclim
   '((candidates . ac-eclim-candidates)
@@ -368,29 +428,51 @@
   "Current editing property.")
 
 (defun ac-css-prefix ()
-  (when (save-excursion (re-search-backward "\\_<\\(.+?\\)\\_>\\s *:.*\\=" nil t))
-    (setq ac-css-property (match-string 1))
+  "No documentation."
+  (when (save-excursion
+          (or (and (re-search-backward "\\_<\\(.+?\\)\\_>\\s *:[^;]*\\=" nil t)
+                   (setq ac-css-property (match-string 1)))
+              (and (re-search-backward "\\(?:^\\|;\\)\\s *[^:]*\\=" nil t)
+                   (setq ac-css-property t))))
     (or (ac-prefix-symbol) (point))))
 
 (defun ac-css-property-candidates ()
-  (or (loop with list = (assoc-default ac-css-property ac-css-property-alist)
-            with seen = nil
-            with value
-            while (setq value (pop list))
-            if (symbolp value)
-            do (unless (memq value seen)
-                 (push value seen)
-                 (setq list
-                       (append list
-                               (or (assoc-default value ac-css-value-classes)
-                                   (assoc-default (symbol-name value) ac-css-property-alist)))))
-            else collect value)
-      ac-css-pseudo-classes))
+  "No documentation."
+  (if (not (stringp ac-css-property))
+      (mapcar 'car ac-css-property-alist)
+    (let ((list (assoc-default ac-css-property ac-css-property-alist)))
+      (if list
+          (cl-loop with seen
+                   with value
+                   while (setq value (pop list))
+                   if (symbolp value)
+                   do (unless (memq value seen)
+                        (push value seen)
+                        (setq list
+                              (append list
+                                      (or (assoc-default value ac-css-value-classes)
+                                          (assoc-default (symbol-name value) ac-css-property-alist)))))
+                   else collect value)
+        ac-css-pseudo-classes))))
 
-(defvar ac-source-css-property
+(ac-define-source css-property
   '((candidates . ac-css-property-candidates)
     (prefix . ac-css-prefix)
     (requires . 0)))
+
+;; slime
+(ac-define-source slime
+  '((depends slime)
+    (candidates . (car (slime-simple-completions ac-prefix)))
+    (symbol . "s")
+    (cache)))
+
+;; ghc-mod
+(ac-define-source ghc-mod
+  '((depends ghc)
+    (candidates . (ghc-select-completion-symbol))
+    (symbol . "s")
+    (cache)))
 
 
 
@@ -399,20 +481,24 @@
 ;; ropemacs
 
 (defvar ac-ropemacs-loaded nil)
+
 (defun ac-ropemacs-require ()
+  "No documentation."
   (with-no-warnings
     (unless ac-ropemacs-loaded
       (pymacs-load "ropemacs" "rope-")
-      (if (boundp 'ropemacs-enable-autoimport)
-          (setq ropemacs-enable-autoimport t))
+      (when (boundp 'ropemacs-enable-autoimport)
+        (setq ropemacs-enable-autoimport t))
       (setq ac-ropemacs-loaded t))))
 
 (defun ac-ropemacs-setup ()
+  "No documentation."
   (ac-ropemacs-require)
-  ;(setq ac-sources (append (list 'ac-source-ropemacs) ac-sources))
+  ;;(setq ac-sources (append (list 'ac-source-ropemacs) ac-sources))
   (setq ac-omni-completion-sources '(("\\." ac-source-ropemacs))))
 
 (defun ac-ropemacs-initialize ()
+  "No documentation."
   (autoload 'pymacs-apply "pymacs")
   (autoload 'pymacs-call "pymacs")
   (autoload 'pymacs-eval "pymacs" nil t)
@@ -455,22 +541,38 @@
 ;;;; Default settings
 
 (defun ac-common-setup ()
-  (add-to-list 'ac-sources 'ac-source-filename))
+  "No documentation."
+  ;; TODO: Don't know this is commented; leave an empty function.
+  ;;(add-to-list 'ac-sources 'ac-source-filename)
+  )
 
 (defun ac-emacs-lisp-mode-setup ()
-  (setq ac-sources (append '(ac-source-features ac-source-functions ac-source-yasnippet ac-source-variables ac-source-symbols) ac-sources)))
+  "No documentation."
+  (setq ac-sources (cl-union '(ac-source-features
+                               ac-source-functions
+                               ac-source-yasnippet
+                               ac-source-variables
+                               ac-source-symbols)
+                             ac-sources)))
 
 (defun ac-cc-mode-setup ()
-  (setq ac-sources (append '(ac-source-yasnippet ac-source-gtags) ac-sources)))
+  "No documentation."
+  (setq ac-sources (cl-union '(ac-source-yasnippet ac-source-gtags)
+                             ac-sources)))
 
 (defun ac-ruby-mode-setup ()
-  (make-local-variable 'ac-ignores)
-  (add-to-list 'ac-ignores "end"))
+  "No documentation."
+  ;; TODO: Don't know this is commented; leave an empty function.
+  )
 
 (defun ac-css-mode-setup ()
-  (setq ac-sources (append '(ac-source-css-property) ac-sources)))
+  "No documentation."
+  (setq ac-sources (cl-union '(ac-source-css-property)
+                             ac-sources)))
 
+;;;###autoload
 (defun ac-config-default ()
+  "No documentation."
   (setq-default ac-sources '(ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
   (add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)
   (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)

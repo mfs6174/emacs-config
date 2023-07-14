@@ -29,18 +29,18 @@
 (global-set-key (kbd "C-t") 'set-mark-command)
 (global-set-key (kbd "C-c C-r") 'rectangle-mark-mode)
 
-(set-default-font "DejaVu Sans Mono-10")
-(set-fontset-font "fontset-default"
-'han '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
-(set-fontset-font "fontset-default"
-'cjk-misc '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
-(set-fontset-font "fontset-default"
-'bopomofo '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
-(set-fontset-font "fontset-default"
-'gb18030 '("WenQuanYi Micro Hei Mono". "unicode-bmp"))
-(set-fontset-font "fontset-default"
-'symbol '("WenQuanYi Micro Hei Mono". "unicode-bmp"))
-(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10"))
+;(set-default-font "DejaVu Sans Mono-10")
+;(set-fontset-font "fontset-default"
+;'han '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
+;(set-fontset-font "fontset-default"
+;'cjk-misc '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
+;(set-fontset-font "fontset-default"
+;'bopomofo '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
+;(set-fontset-font "fontset-default"
+;'gb18030 '("WenQuanYi Micro Hei Mono". "unicode-bmp"))
+;(set-fontset-font "fontset-default"
+;'symbol '("WenQuanYi Micro Hei Mono". "unicode-bmp"))
+;(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10"))
 ;;设置字体
 
 (setq default-frame-alist 
@@ -99,6 +99,9 @@
 	  'bash-completion-dynamic-complete)
 ;;load bash completion
 
+
+(require 'native-complete)
+
 (add-hook 'shell-mode-hook 'my-shell-mode-hook)
 (defun my-shell-mode-hook ()
   (setq comint-input-ring-file-name "~/.bash_history")  ;; or bash_history
@@ -148,6 +151,11 @@
   )
   (shell)
   (rename-buffer "*shell*_m" 1)
+  ;;(with-current-buffer
+  (shell-cd default-directory)
+  (let ((cmd (concat "cd " (shell-quote-argument default-directory) "\n")))
+    (comint-send-string nil cmd))
+  ;;)
   )
 ;;rename shell buffer, and open new; if current is not shell, just open new shell
 (global-set-key (kbd "C-c s") 'my-multi-shell)
